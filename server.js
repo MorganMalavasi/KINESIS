@@ -33,12 +33,12 @@ app.get('/sendmessage', (req,res) => {
     console.log(phone);
     console.log(message);
 
-    let ourMail = 'morgan.malavsi@gmail.com';
+    let ourMail = '...';
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: ourMail,
-          pass: 'supermorgan97'
+          pass: '...'
         }
       });
       
