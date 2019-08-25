@@ -21,6 +21,10 @@ app.get('/corsi', (req,res) => {
   res.render('corsi');
 });
 
+app.get('/promo', (req,res) => {
+  res.render('promo');
+});
+
 
 app.get('/sendmessage', (req,res) => {
     let name = req.query.name;
