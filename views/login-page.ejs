@@ -145,7 +145,7 @@
         <% if (typeof msg != 'undefined') {%>      
           <p class="message font-weight-bold"><%= msg %></p>
         <% }; %>
-      <form class="login-form" action="/loginUser" method="POST">
+      <form class="login-form" action="/user/loginUser" method="POST">
         <input type="text" placeholder="username" name="username">
         <input type="password" placeholder="password" name="password">
         <button>login</button>
