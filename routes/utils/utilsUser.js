@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retryWrites=true&w=majority";
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 async function insertUser(firstname, lastname, username, cel, password) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
