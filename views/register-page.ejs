@@ -136,19 +136,20 @@
 <body>
 
     <!-- login page-->
-        
+
     <div class="login-page">
+        <p class="message font-weight-bold">
+            Cerca di mantenere l'username al sicuro perchè lo utilizzerai per entrare nella tua pagina personale
+        </p>
         <div class="form">
-                <% if (typeof msg != 'undefined') {%>      
-                    <p class="message font-weight-bold"><%= msg %></p>
-                <% }; %>
+            <% if (typeof msg != 'undefined') {%>
+            <p class="message font-weight-bold"><%= msg %></p>
+            <% }; %>
             <form class="login-form" action="/user/registerUser" method="POST">
                 <input type="text" placeholder="nome" name="firstname">
-                <input type="text" placeholder="cognome" name="lastname" >
+                <input type="text" placeholder="cognome" name="lastname">
                 <input type="text" placeholder="username" name="username">
                 <input type="text" placeholder="n.cellulare" name="cel">
-                <input type="password" placeholder="password" name="password">
-                <input type="password" placeholder="Ripeti password" name="passwordrepeated">
                 <button>FATTO</button>
                 <p class="message font-weight-bold">Già resistrato? <a href="/login-page">Fai il login!</a></p>
             </form>

@@ -1,11 +1,9 @@
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retryWrites=true&w=majority";
-const bcrypt = require('bcrypt');
 
-async function insertUser(firstname, lastname, username, cel, password) {
+async function insertUser(firstname, lastname, username, cel) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { firstname: firstname, lastname: lastname, username: username, cel: cel, password: hashedPassword };
+    const user = { firstname: firstname, lastname: lastname, username: username, cel: cel};
     return new Promise((resolve, reject) => {
         client.connect(async function (err) {
             if (err) {
@@ -26,7 +24,7 @@ async function insertUser(firstname, lastname, username, cel, password) {
                         });
                     } else {
                         client.close();
-                        console.log('Element already Exists');
+                        console.log('Username già esistente');
                         resolve(2);
                     }
                 } catch (err) {
@@ -37,7 +35,7 @@ async function insertUser(firstname, lastname, username, cel, password) {
     });
 }
 
-function recoverUser(username, password) {
+function recoverUser(username) {
     return new Promise((resolve, reject) => {
         const client = new MongoClient(uri, { useNewUrlParser: true });
         client.connect(function (err) {
@@ -53,19 +51,8 @@ function recoverUser(username, password) {
                         if (result == null) {
                             reject('username incorretto, riprova');
                         } else {
-                            try {
-                                if (await bcrypt.compare(password, result.password)) {
-                                    client.close();
-                                    resolve(1);
-                                }
-                                else {
-                                    client.close();
-                                    resolve(2);
-                                }
-                            } catch (err) {
-                                client.close();
-                                reject(err);
-                            }
+                            client.close();
+                            resolve(true);
                         }
                     }
                 });

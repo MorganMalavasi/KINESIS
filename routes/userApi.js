@@ -11,27 +11,18 @@ router.post('/registerUser', async (req, res) => {
     let lastname = req.body.lastname;
     let username = req.body.username;
     let cel = req.body.cel;
-    let password = req.body.password;
-    let passwordrepeated = req.body.passwordrepeated;
 
     if (firstname == '' ||
         lastname == '' ||
         username == '' ||
-        cel == '' ||
-        password == '' ||
-        passwordrepeated == '') {
+        cel == '') {
         res.render('register-page', {
             msg: 'Hai dimenticato di inserire qualcosa! Riprova!'
-        });
-    }
-    else if (password != passwordrepeated) {
-        res.render('register-page', {
-            msg: 'Le password che hai inserito non sono uguali! Riprova!'
         });
     } else {
         // insert user in db 
         try {
-            const resEnterUser = await utilsUser.insertUser(firstname, lastname, username, cel, password);
+            const resEnterUser = await utilsUser.insertUser(firstname, lastname, username, cel);
             console.log(resEnterUser);
             if (resEnterUser == 1)
                 res.status(200).send('Utente aggiunto correttamente');
@@ -50,20 +41,12 @@ router.post('/registerUser', async (req, res) => {
 
 router.post('/loginUser', async (req, res) => {
     let username = req.body.username;
-    let password = req.body.password;
 
     try {
-        const enter = await utilsUser.recoverUser(username, password);
-        if (enter == 1) {
-            res.render('mainUserPage', {
-                name: username
-            });
-        } else if (enter == 2) {
-            res.render('login-page', {
-                msg: 'password incorretta, riprova'
-            });
-        }
-
+        await utilsUser.recoverUser(username);
+        res.render('mainUserPage', {
+            name: username
+        });
     } catch (error) {
         res.render('login-page', {
             msg: error
