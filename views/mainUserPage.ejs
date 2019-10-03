@@ -41,15 +41,11 @@
     </div>
     <!-- lezioni a cui ci si può iscrivere -->
     </br>
-    <div class="center">
-        <h6>
-            Clicca qui sotto per iscriverti
-        </h6>
-    </div>
     <!-- call ajax for display available lessons -->
     <div class="text-center mt-4">
         <a class="btn btn-xl btn-outline-danger"
-            style="font-weight: 700; border-radius: 1.25rem; width: 80%; border: 3px solid; background-color: skyblue" onclick="ajaxSearchJson()">
+            style="font-weight: 700; border-radius: 1.25rem; width: 80%; border: 3px solid; background-color: skyblue"
+            onclick="ajaxSearchJson()">
             Seleziona Lezione
         </a>
     </div>
@@ -57,9 +53,12 @@
     </br>
     <div class="container">
         <div class="row justify-content-center" id="fill" style="display: inline">
-
+            <% if (typeof msg != 'undefined') {%>
+            <p style="text-align:center" class="lead"><%= msg %></p>
+            <% }; %>
         </div>
     </div>
+
 
 
 
@@ -74,10 +73,11 @@
 
                     let stackResults = '';
                     for (var obj in lessonsJson) {
+                        let id_course = lessonsJson[obj]._id;
                         let nameCourse = lessonsJson[obj].name;
                         let day = new Date(lessonsJson[obj].day);
                         let dd = day.getDate();
-                        let mm = day.getMonth()+1;
+                        let mm = day.getMonth() + 1;
                         let yy = day.getFullYear();
                         day = 'giorno : ' + dd + '/' + mm + '/' + yy;
                         let time = 'ora : ' + lessonsJson[obj].time;
@@ -99,7 +99,9 @@
                             '<p class="card-text">Posti disponibili: ' +
                             seats
                             + '</p>' +
-                            '<a href="#" class="btn btn-primary">Prenota</a>' +
+                            '<a href="/courses/book/prenotations/?user=<%=user%>&name=<%=name%>&id=' + id_course +
+                            '&seats=' + seats +
+                            '" class="btn btn-primary">Prenota</a>' +
                             '</div>' +
                             '</div>';
 
@@ -116,7 +118,7 @@
             xhttp.send();
         }
 
-        
+
     </script>
 
     <!-- Optional JavaScript -->

@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     let yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
-    
+
     try {
         let courses = await utilsCourses.getCourses(today);
         let coursesJson = JSON.stringify(courses);
@@ -21,6 +21,44 @@ router.get('/', async (req, res) => {
     } catch (err) {
         console.log(err);
         res.send(coursesJson);
+    }
+});
+
+router.get('/prenotations', async (req, res) => {
+
+    let name = req.query.name;
+    let idUser = req.query.user;
+    let id = req.query.id;
+    let seats = req.query.seats;
+
+    try {
+        let bLesson = await utilsCourses.bookLesson(idUser, id, seats);
+        if (bLesson == 1){
+            res.render('mainUserPage', {
+                msg: "Lezione Prenotata",
+                name: name,
+                user: idUser
+            });
+        } else if (bLesson == 2) {
+            res.render('mainUserPage', {
+                msg: "Impossibile prenotare lezione, non ci sono più posti",
+                name: name,
+                user: idUser
+            });
+        } else if (bLesson == 3) {
+            res.render('mainUserPage', {
+                msg: "Ti sei già prenotato alla seguente lezione!",
+                name: name,
+                user: idUser
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        res.render('mainUserPage', {
+            msg: "Impossibile prenotare lezione, errore = " + err,
+            name: name,
+            user: idUser
+        });
     }
 });
 

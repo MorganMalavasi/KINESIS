@@ -25,7 +25,7 @@ router.post('/registerUser', async (req, res) => {
             const resEnterUser = await utilsUser.insertUser(firstname, lastname, username, cel);
             console.log(resEnterUser);
             if (resEnterUser == 1)
-                res.status(200).send('Utente aggiunto correttamente');
+                res.render('login-page');
             else if (resEnterUser == 2) {
                 res.render('register-page', {
                     msg: 'Username già esistente, cambia e riprova!'
@@ -43,9 +43,10 @@ router.post('/loginUser', async (req, res) => {
     let username = req.body.username;
 
     try {
-        await utilsUser.recoverUser(username);
+        let id_user = await utilsUser.recoverUser(username);
         res.render('mainUserPage', {
-            name: username
+            name: username,
+            user: id_user
         });
     } catch (error) {
         res.render('login-page', {

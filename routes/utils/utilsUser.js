@@ -3,7 +3,7 @@ const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retr
 
 async function insertUser(firstname, lastname, username, cel) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    const user = { firstname: firstname, lastname: lastname, username: username, cel: cel};
+    const user = { firstname: firstname, lastname: lastname, username: username, cel: cel, lessons: []};
     return new Promise((resolve, reject) => {
         client.connect(async function (err) {
             if (err) {
@@ -52,7 +52,7 @@ function recoverUser(username) {
                             reject('username incorretto, riprova');
                         } else {
                             client.close();
-                            resolve(true);
+                            resolve(result._id);
                         }
                     }
                 });
