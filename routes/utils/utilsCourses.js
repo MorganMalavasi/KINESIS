@@ -24,6 +24,149 @@ async function getCourses(day) {
     });
 }
 
+
+function bookLesson(idUser, id, seats) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        if (seats <= 0) {
+            resolve(2);
+        } else {
+            client.connect(async function (err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+                    const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                    let elem = await collectionLessons.findOne({ "_id": ObjectId(id) });
+
+                    // se nella lezione cercata non c'è l'id dell'utente allora posso inserirlo
+                    if (!(elem.users).includes(idUser)) {
+                        try {
+                            // inserimento nella collezione delle lezioni 
+                            let newSeats = seats - 1;
+                            let findL = { "_id": ObjectId(id) };
+                            let updateL = { $set: { "seats": newSeats }, $push: { "users": idUser } };
+                            await collectionLessons.updateOne(findL, updateL);
+
+                            // inserimento nella collezione degli utenti
+                            let findU = { "_id": ObjectId(idUser) };
+                            let updateU = { $push: { "lessons": id } };
+                            await collectionUsers.updateOne(findU, updateU);
+
+                            client.close();
+                            resolve(1);
+                        } catch (err) {
+                            client.close();
+                            console.log(err);
+                            reject(err);
+                        }
+                    } else {
+                        // se l'utente è già registrato alla lezione, non può registrarsi nuovamente 
+                        client.close();
+                        resolve(3);
+                    }
+                }
+            });
+        }
+    });
+}
+
+function lessonsBooked(idUser) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                try {
+                    let stackOfLessonsBooked = [];
+                    const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                    const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+                    let user = await collectionUsers.findOne({ "_id": ObjectId(idUser) });
+
+                    // ottenuto l'utente ciclo su tutte le lezioni e creo un json di elementi delle lezioni
+                    // prenotate con tutte le informazioni di ogni lezione
+
+                    if ((user.lessons).length == 0) {
+                        client.close();
+                        resolve(stackOfLessonsBooked);
+                    } else {
+                        (user.lessons).forEach(async function (elem, idx, array) {
+                            let lesson = await collectionLessons.findOne({ "_id": ObjectId(elem) });
+                            await insertElementInStack(lesson, stackOfLessonsBooked);
+                            if (idx == array.length - 1) {
+                                client.close();
+                                resolve(stackOfLessonsBooked);
+                            }
+                        });
+                    }
+                } catch (err) {
+                    client.close();
+                    reject(err);
+                }
+
+            }
+        });
+    });
+}
+
+function deleteLesson(idUser, idLesson) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                try {
+                    const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                    const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+
+                    // cancellare la lezione dalle lezioni dell'utente.
+                    let findU = { "_id": ObjectId(idUser) };
+                    let updateU = { $pull: { "lessons": idLesson } };
+                    await collectionUsers.updateOne(findU, updateU);
+
+                    // cancellare utente dalla lista nelle lezioni e aumentare di 1 i posti
+                    let foundLesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
+                    if (foundLesson && (foundLesson.users).includes(idUser)) {
+                        let seats = foundLesson.seats;
+                        let newSeats = seats + 1;
+                        let findL = { "_id": ObjectId(idLesson) };
+                        let updateL = { $set: { "seats": newSeats }, $pull: { "users": idUser } };
+                        await collectionLessons.updateOne(findL, updateL);
+                        client.close();
+                        resolve();
+                    } else {
+                        client.close();
+                        resolve();
+                    }
+                } catch (err) {
+                    client.close();
+                    reject(err);
+                }
+            }
+        });
+    });
+}
+
+
+
+function insertElementInStack(lesson, stackOfLessonsBooked) {
+    return new Promise((resolve, reject) => {
+        if (lesson) {
+            let id_lesson = lesson._id;
+            let name = lesson.name;
+            let day = lesson.day;
+            let time = lesson.time;
+            const obj = { id_lesson: id_lesson, name: name, day: day, time: time };
+            stackOfLessonsBooked.push(obj);
+            resolve();
+        } else {
+            resolve();
+        }
+    });
+}
+
 function differenceInDays(d1, d2) {
     return new Promise((resolve, reject) => {
         const date1 = new Date(d1);
@@ -38,49 +181,4 @@ function differenceInDays(d1, d2) {
 }
 
 
-function bookLesson(idUser, id, seats) {
-    const client = new MongoClient(uri, { useNewUrlParser: true });
-    return new Promise((resolve, reject) => {
-        if (seats <= 0) {
-            resolve(2);
-        } else {
-            client.connect(async function (err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
-                    let elem = await collectionLessons.findOne({ "_id": ObjectId(id) });
-                    // se nella lezione cercata non c'è l'id dell'utente allora posso inserirlo
-                    if (!(elem.users).includes(idUser)) {
-                        // inserimento nella collezione delle lezioni 
-                        let newSeats = seats - 1;
-                        let find = { "_id": ObjectId(id) };
-                        let update = { $set: { "seats": newSeats }, $push: { "users": idUser } };
-                        collectionLessons.updateOne(find, update, (err, res) => {
-                            if (err) {
-                                client.close();
-                                reject(err);
-                            } else {
-                                client.close();
-                                resolve(1);
-                            }
-                        });
-                        // inserimento nella collezione dell'utente 
-                        
-                    
-                    } else {
-                        // se l'utente è già registrato alla lezione, non può registrarsi nuovamente 
-                        client.close();
-                        resolve(3);
-                    }
-
-                }
-            });
-        }
-    });
-}
-
-
-
-
-module.exports = { getCourses, bookLesson };
+module.exports = { getCourses, bookLesson, lessonsBooked, deleteLesson};

@@ -17,6 +17,47 @@
             width: 80%;
             padding: 5px;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            border: 1px solid #ddd;
+            margin-top: -1px;
+            /* Prevent double borders */
+            background-color: #2d9618;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 15px;
+            color: black;
+            display: block;
+            position: relative;
+            border-radius: 15px;
+        }
+
+        .close {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 0%;
+            padding: 12px 16px;
+            transform: translate(0%, -50%);
+            background-color: white;
+        }
+
+        .close:hover {
+            background: #bbb;
+        }
+    </style>
+
+
     </style>
 </head>
 
@@ -31,14 +72,19 @@
         </h5>
     </div>
 
+
+
     <!-- esporre lezioni a cui ci si è prenotati -->
     </br>
-    <!-- call ajax for display booked lessons -->
-    <div class="center">
-        <h6>
-            Nessuna prenotazione ancora effettuata
-        </h6>
+    <div class="container">
+        <div class="row justify-content-center" id="viewLessonsBooked" style="display: inline">
+
+        </div>
     </div>
+
+
+
+
     <!-- lezioni a cui ci si può iscrivere -->
     </br>
     <!-- call ajax for display available lessons -->
@@ -63,6 +109,8 @@
 
 
     <script>
+
+        // recover lessons when button is pushed 
         function ajaxSearchJson() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -118,6 +166,54 @@
             xhttp.send();
         }
 
+
+        // display lessons booked from start
+        window.onload = function () {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    let lessonsBookedJson = JSON.parse(this.responseText);
+                    console.log(lessonsBookedJson);
+
+                    let stackResults = '';
+                    if (isEmpty(lessonsBookedJson)) {
+                        stackResults = '<h6 class="center">Nessuna lezione prenotata</h6>';
+                    } else {
+                        stackResults = '<h6>Clicca sulla x per rimuovere la prenotazione e liberare un posto</h6>';
+                        stackResults = stackResults + '<ul>';
+                        for (var obj in lessonsBookedJson) {
+                            let name = lessonsBookedJson[obj].name;
+                            let id_lesson = lessonsBookedJson[obj].id_lesson;
+                            let day = lessonsBookedJson[obj].day;
+                            let time = lessonsBookedJson[obj].time;
+
+                            let displayLesson = '<li>' + name +
+                                '<span class="close"><a href="/courses/book/delete?user=<%=user%>&idLesson=' + id_lesson + '&name=<%=name%>" >&times</a></span></li>';
+
+                            stackResults = stackResults + displayLesson;
+                        }
+                        stackResults = stackResults + '</ul>';
+                    }
+
+                    document.getElementById("viewLessonsBooked").innerHTML = stackResults;
+
+                }
+                else if (this.status == 400 || this.status == 500 || this.status == 505 || this.status == 404 || this.status == 403) {
+                    document.getElementById("fill").innerHTML = "Impossibile recuperare lista delle lezioni prenotate";
+                }
+            };
+            xhttp.open("GET", '/courses/book/view/?user=<%=user%>', true);
+            xhttp.send();
+        }
+
+        function isEmpty(obj) {
+            for (var prop in obj) {
+                return false;
+            }
+
+            return true;
+        }
 
     </script>
 

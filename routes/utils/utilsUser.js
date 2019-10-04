@@ -28,6 +28,7 @@ async function insertUser(firstname, lastname, username, cel) {
                         resolve(2);
                     }
                 } catch (err) {
+                    client.close();
                     reject('Error entering element');
                 }
             }
@@ -49,6 +50,7 @@ function recoverUser(username) {
                         reject('Error looking for the user');
                     } else {
                         if (result == null) {
+                            client.close();
                             reject('username incorretto, riprova');
                         } else {
                             client.close();

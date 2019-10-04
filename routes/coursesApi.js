@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
         res.send(coursesJson);
     } catch (err) {
         console.log(err);
-        res.send(coursesJson);
+        res.send(err);
     }
 });
 
@@ -33,7 +33,7 @@ router.get('/prenotations', async (req, res) => {
 
     try {
         let bLesson = await utilsCourses.bookLesson(idUser, id, seats);
-        if (bLesson == 1){
+        if (bLesson == 1) {
             res.render('mainUserPage', {
                 msg: "Lezione Prenotata",
                 name: name,
@@ -56,6 +56,41 @@ router.get('/prenotations', async (req, res) => {
         console.log(err);
         res.render('mainUserPage', {
             msg: "Impossibile prenotare lezione, errore = " + err,
+            name: name,
+            user: idUser
+        });
+    }
+});
+
+router.get('/view', async (req, res) => {
+    let idUser = req.query.user;
+
+    try {
+        let lessonsBooked = await utilsCourses.lessonsBooked(idUser);
+        let lessonsBookedJson = JSON.stringify(lessonsBooked);
+        res.send(lessonsBookedJson);
+    } catch (err) {
+        console.log(err);
+        res.send({});
+    }
+});
+
+router.get('/delete', async (req, res) => {
+    let idUser = req.query.user;
+    let idLesson = req.query.idLesson;
+    let name = req.query.name;
+
+    try {
+        await utilsCourses.deleteLesson(idUser, idLesson);
+        res.render('mainUserPage', {
+            msg: 'Lezione cancellata correttamente',
+            name: name,
+            user: idUser
+        });
+    } catch (err) {
+        console.log(err);
+        res.render('mainUserPage', {
+            msg: 'Non è stato possibile cancellarti dalla lezione per un errore tecnico, chiama 3313216669',
             name: name,
             user: idUser
         });
