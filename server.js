@@ -37,10 +37,6 @@ app.get('/register-page', (req, res) => {
   res.render('register-page');
 })
 
-app.get('/admin', (req, res) => {
-  res.render('admin');
-});
-
 /////////////////////////////////////////////////////////////
 
 app.get('/sendmessage', (req, res) => {
