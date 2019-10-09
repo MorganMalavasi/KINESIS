@@ -36,7 +36,7 @@ function deleteUser(idUser) {
                     // eliminare utente dal db + tutte le lezioni a cui è registrato
                     let user = await collectionUsers.findOne({ "_id": ObjectId(idUser) });
                     let stackLessonsOfUsers = [];
-                    
+
                     if (user) {
                         // se l'utente esiste nel db fai operazioni
                         await copyLessons(user, stackLessonsOfUsers);
@@ -91,4 +91,25 @@ function copyLessons(user, stack) {
     });
 }
 
-module.exports = { getlistUsers, deleteUser };
+function getAllLessons() {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect((err) => {
+            if (err) {
+                reject('Error loading DB');
+            } else {
+                let stackLessons = [];
+                const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+                collectionLessons.find({}).forEach((elem) => {
+                    stackLessons.push(elem);
+                }).then(() => {
+                    client.close();
+                    console.log(stackLessons);
+                    resolve(stackLessons);
+                });
+            }
+        });
+    });
+}
+
+module.exports = { getlistUsers, deleteUser, getAllLessons };

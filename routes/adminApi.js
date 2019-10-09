@@ -11,7 +11,7 @@ router.get('/list/users', async (req, res) => {
     try {
         let listUsers = await utilsAdmin.getlistUsers();
         console.log(listUsers);
-        if (typeof listUsers != "undefined"
+        if (typeof listUsers != undefined
             && listUsers != null
             && listUsers.length != null
             && listUsers.length > 0) {
@@ -36,6 +36,34 @@ router.get('/delete/user', async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(204).send('IMPOSSIBILE ELIMINARE UTENTE  Errore = ' + err);
+    }
+});
+
+router.get('/newcourse', (req, res) => {
+    res.render('operations/newCourse');
+});
+
+router.get('/list/lessons', async (req, res) => {
+
+    try {
+        let stackLessons = await utilsAdmin.getAllLessons();
+        if (typeof stackLessons != undefined
+            && stackLessons != null
+            && stackLessons.length != null
+            && stackLessons.length > 0) {
+            res.render('operations/listLessons', {
+                stackLessons: stackLessons
+            });
+        } else {
+            res.render('operations/listLessons', {
+                msg: 'Non ci sono lezioni nel Database',
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        res.render('operations/listLessons', {
+            msg: 'Impossibile disporre lezioni, cod. errore = ' + err,
+        });
     }
 });
 
