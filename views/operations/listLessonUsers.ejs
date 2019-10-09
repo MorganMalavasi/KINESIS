@@ -10,26 +10,25 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Kinesis - Lista lezioni</title>
+    <title>Kinesis - Utenti nella lezione </title>
 </head>
 
 <body>
     <div class="container">
-        <h1>Lista lezioni nel database</h1>
-        <h4>Il tasto rimuovi elimina la lezione per il determinato giorno</h4>
+        <h1>Gli utenti nella lezione sono i seguenti</h1>
+        <h4>Il tasto rimuovi elimina l'utente dalla lista dei registrati per questo giorno</h4>
         </br>
 
-        <% if (stackLessons != 'undefined') { %>
+        <% if (stackUsersofLesson != 'undefined') { %>
         <ul class="list-group list-group-flush">
-            <% for (let prop in stackLessons) { %>
+            <% for (let prop in stackUsersofLesson) { %>
             <li class="list-group-item" style="font-size: 18px">
-                <%= stackLessons[prop].name + ' giorno = ' +  stackLessons[prop].day %>
-                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-danger" style="float: right;">Rimuovi</a>
-                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-primary" style="float: right; margin-right: 10px">Vedi Iscritti</a>
+                <%= stackUsersofLesson[prop].firstname + ' ' + stackUsersofLesson[prop].lastname%>
+                <a href="/admin/delete/user/inlesson/?idLesson=<%=idLesson%>&idUser=<%=stackUsersofLesson[prop]._id%>" class="btn btn-danger" style="float: right;">Rimuovi</a>
             </li>
             <% } %>
         </ul>
-        <% } %> 
+        <% } %>
         <% if (msg != 'undefined'){ %>
         <h4><%=msg%></h4>
         <% }; %>
