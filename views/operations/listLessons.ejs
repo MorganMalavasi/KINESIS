@@ -22,7 +22,7 @@
         <% function getStringDate(day) { 
             let dayDateFormat = new Date(day);
             let d = dayDateFormat.getDay();
-            let dX = dayDateFormat.getUTCDate() + 1;
+            let dX = dayDateFormat.getUTCDate();
             let m = dayDateFormat.getMonth() + 1;
             let y = dayDateFormat.getFullYear();
             let dayString = getDayString(d);
