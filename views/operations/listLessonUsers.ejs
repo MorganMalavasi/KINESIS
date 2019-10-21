@@ -15,16 +15,23 @@
 
 <body>
     <div class="container">
+
+        <% function countPeople(stack) {
+                return stack.length;
+        } %>
+
         <h1>Gli utenti nella lezione sono i seguenti</h1>
         <h4>Il tasto rimuovi elimina l'utente dalla lista dei registrati per questo giorno</h4>
         </br>
-
         <% if (stackUsersofLesson != 'undefined') { %>
+        <h3>Gli iscritti sono : <%= countPeople(stackUsersofLesson) %></h3>
+
         <ul class="list-group list-group-flush">
             <% for (let prop in stackUsersofLesson) { %>
             <li class="list-group-item" style="font-size: 18px">
                 <%= stackUsersofLesson[prop].firstname + ' ' + stackUsersofLesson[prop].lastname%>
-                <a href="/admin/delete/user/inlesson/?idLesson=<%=idLesson%>&idUser=<%=stackUsersofLesson[prop]._id%>" class="btn btn-danger" style="float: right;">Rimuovi</a>
+                <a href="/admin/delete/user/inlesson/?idLesson=<%=idLesson%>&idUser=<%=stackUsersofLesson[prop]._id%>"
+                    class="btn btn-danger" style="float: right;">Rimuovi</a>
             </li>
             <% } %>
         </ul>

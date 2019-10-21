@@ -186,9 +186,16 @@
                             let name = lessonsBookedJson[obj].name;
                             let id_lesson = lessonsBookedJson[obj].id_lesson;
                             let day = lessonsBookedJson[obj].day;
+                            let dayDateFormat = new Date(day);
+                            let d = dayDateFormat.getDay();
+                            let dX = dayDateFormat.getUTCDate() + 1;
+                            let m = dayDateFormat.getMonth() + 1;
+                            let y = dayDateFormat.getFullYear();
+                            let dayString = getDayString(d);
+                            let newDay =  dayString + " " + dX + "/" + m + "/" + y;
                             let time = lessonsBookedJson[obj].time;
 
-                            let displayLesson = '<li>' + name + ' ' + day + '  h:' + time +
+                            let displayLesson = '<li>' + name + ' ' + newDay + '  h:' + time +
                                 '<span class="close"><a href="/courses/book/delete?user=<%=user%>&idLesson=' + id_lesson + '&name=<%=name%>" >&times</a></span></li>';
 
                             stackResults = stackResults + displayLesson;
@@ -211,8 +218,35 @@
             for (var prop in obj) {
                 return false;
             }
-
             return true;
+        }
+
+        function getDayString(d){
+            switch (d) {
+                case 0:
+                    return "domenica";
+                    break;
+                case 1:
+                    return "lunedi";
+                    break;
+                case 2:
+                    return "martedi";
+                    break;
+                case 3:
+                    return "mercoledi";
+                    break;
+                case 4:
+                    return "giovedi";
+                    break;
+                case 5:
+                    return "venerdi";
+                    break;
+                case 6:
+                    return "sabato";
+                    break;
+                default:
+                    return "";
+            }
         }
 
     </script>

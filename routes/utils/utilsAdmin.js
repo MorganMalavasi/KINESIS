@@ -100,8 +100,11 @@ function getAllLessons() {
             } else {
                 let stackLessons = [];
                 const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
-                collectionLessons.find({}).forEach((elem) => {
-                    stackLessons.push(elem);
+                collectionLessons.find().forEach(async (elem) => {
+                    // difference in days between today and the day from the array 
+                    const diff = await differenceInDays(elem.day);
+                    if (diff)
+                        stackLessons.push(elem);
                 }).then(() => {
                     client.close();
                     console.log(stackLessons);
@@ -254,6 +257,19 @@ function deleteUserFromList(idLesson, idUser) {
                 }
             }
         });
+    });
+}
+
+function differenceInDays(dayFromArray) {
+    return new Promise((resolve, reject) => {
+        const date1 = new Date();
+        const date2 = new Date(dayFromArray);
+        const diffTime = date2 - date1;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays <= 7)
+            resolve(true);
+        else
+            resolve(false);
     });
 }
 

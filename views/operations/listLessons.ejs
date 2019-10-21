@@ -19,22 +19,62 @@
         <h4>Il tasto rimuovi elimina la lezione per il determinato giorno</h4>
         </br>
 
+        <% function getStringDate(day) { 
+            let dayDateFormat = new Date(day);
+            let d = dayDateFormat.getDay();
+            let dX = dayDateFormat.getUTCDate() + 1;
+            let m = dayDateFormat.getMonth() + 1;
+            let y = dayDateFormat.getFullYear();
+            let dayString = getDayString(d);
+            let newDay =  dayString + " " + dX + "/" + m + "/" + y;
+            return newDay;
+        } %>
+
+        <% function getDayString(d){
+            switch (d) {
+                case 0:
+                    return "domenica";
+                    break;
+                case 1:
+                    return "lunedi";
+                    break;
+                case 2:
+                    return "martedi";
+                    break;
+                case 3:
+                    return "mercoledi";
+                    break;
+                case 4:
+                    return "giovedi";
+                    break;
+                case 5:
+                    return "venerdi";
+                    break;
+                case 6:
+                    return "sabato";
+                    break;
+                default:
+                    return "";
+            }
+        } %>
+
+
         <% if (stackLessons != 'undefined') { %>
         <ul class="list-group list-group-flush">
             <% for (let prop in stackLessons) { %>
             <li class="list-group-item" style="font-size: 18px">
-                <%= stackLessons[prop].name + ' giorno = ' +  stackLessons[prop].day %>
-                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-danger" style="float: right;">Rimuovi</a>
-                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-primary" style="float: right; margin-right: 10px">Vedi Iscritti</a>
+                <%= stackLessons[prop].name + ' ---- ' +  getStringDate(stackLessons[prop].day) %>
+                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-danger"
+                    style="float: right;">Rimuovi</a>
+                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-primary"
+                    style="float: right; margin-right: 10px">Vedi Iscritti</a>
             </li>
             <% } %>
         </ul>
-        <% } %> 
+        <% } %>
         <% if (msg != 'undefined'){ %>
         <h4><%=msg%></h4>
         <% }; %>
-
-
 
     </div>
 

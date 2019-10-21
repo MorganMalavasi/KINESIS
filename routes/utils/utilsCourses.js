@@ -87,6 +87,8 @@ function lessonsBooked(idUser) {
                     // ottenuto l'utente ciclo su tutte le lezioni e creo un json di elementi delle lezioni
                     // prenotate con tutte le informazioni di ogni lezione
 
+                    // TODO : aggiungere eliminazione delle vecchie lezioni 
+
                     if ((user.lessons).length == 0) {
                         client.close();
                         resolve(stackOfLessonsBooked);
