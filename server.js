@@ -14,11 +14,11 @@ app.set('view engine', 'ejs');
 
 // switch between pages ejs engine //////////////////////////
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('start_promo');
 });
 
-app.get('/osteopatia', (req, res) => {
-  res.render('osteopatia');
+app.get('/index', (req, res) => {
+  res.render('index');
 });
 
 app.get('/corsi', (req, res) => {
