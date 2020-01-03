@@ -160,7 +160,8 @@ function insertElementInStack(lesson, stackOfLessonsBooked) {
             let name = lesson.name;
             let day = lesson.day;
             let time = lesson.time;
-            const obj = { id_lesson: id_lesson, name: name, day: day, time: time };
+            let people = lesson.users;
+            const obj = { id_lesson: id_lesson, name: name, day: day, time: time, users: people};
             stackOfLessonsBooked.push(obj);
             resolve();
         } else {

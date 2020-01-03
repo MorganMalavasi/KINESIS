@@ -25,6 +25,10 @@ app.get('/corsi', (req, res) => {
   res.render('corsi');
 });
 
+app.get('/osteopatia', (req, res) => {
+  res.render('osteopatia');
+});
+
 app.get('/promo', (req, res) => {
   res.render('promo');
 });

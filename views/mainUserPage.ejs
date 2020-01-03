@@ -72,6 +72,9 @@
         <h5>
             Da questa pagina puoi vedere tutte le tue prenotazioni e iscriverti ai corsi.
         </h5>
+        <h7>
+            Il corso è garantito solo in caso il numero di partecipanti sia superiore a 5
+        </h7>
     </div>
 
 
@@ -195,8 +198,17 @@
                             let newDay =  dayString + " " + dX + "/" + m + "/" + y;
                             let time = lessonsBookedJson[obj].time;
 
-                            let displayLesson = '<li>' + name + ' ' + newDay + '  h:' + time +
-                                '<span class="close"><a href="/courses/book/delete?user=<%=user%>&idLesson=' + id_lesson + '&name=<%=name%>" >&times</a></span></li>';
+                            // se ci sono più di 5 persone la lezione è garantita
+                            let lezGarantita;
+                            if ((lessonsBookedJson[obj].users).length >= 5)
+                                lezGarantita = "Lezione garantita";
+                            else    
+                                lezGarantita = "Lezione non garantita";
+
+                            let displayLesson = '<li>' + name + '</br> ' + newDay + '  h:' + time +
+                                '<span class="close"><a href="/courses/book/delete?user=<%=user%>&idLesson=' + id_lesson + '&name=<%=name%>" >&times</a>' +  
+                                    '</span><p><b>' + lezGarantita + '</b></p></li>';
+                            
 
                             stackResults = stackResults + displayLesson;
                         }
