@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 
 // switch between pages ejs engine //////////////////////////
 app.get('/', (req, res) => {
-  res.render('start_promo');
+  res.render('index');
 });
 
 app.get('/index', (req, res) => {
