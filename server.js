@@ -39,7 +39,23 @@ app.get('/login-page', (req, res) => {
 
 app.get('/register-page', (req, res) => {
   res.render('register-page');
-})
+});
+
+app.get('/fromHome', (req, res) => {
+  res.render('fromHome');
+});
+
+app.get('/trainingAlberto', (req, res) => {
+  res.render('trainingPapa');
+});
+
+app.get('/trainingStefi', (req, res) => {
+  res.render('trainingStefi');
+});
+
+app.get('/trainingLohOnn', (req, res) => {
+  res.render('trainingLohOnn');
+});
 
 /////////////////////////////////////////////////////////////
 
