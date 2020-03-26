@@ -57,6 +57,10 @@ app.get('/trainingLohOnn', (req, res) => {
   res.render('trainingLohOnn');
 });
 
+app.get('/trainingIlaria', (req, res) => {
+  res.render('trainingIlaria');
+});
+
 /////////////////////////////////////////////////////////////
 
 app.get('/sendmessage', (req, res) => {
