@@ -61,6 +61,10 @@ app.get('/trainingIlaria', (req, res) => {
   res.render('trainingIlaria');
 });
 
+app.get('/trainingDaniele', (req, res) => {
+  res.render('trainingDaniele');
+});
+
 /////////////////////////////////////////////////////////////
 
 app.get('/sendmessage', (req, res) => {
