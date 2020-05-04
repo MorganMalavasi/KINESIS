@@ -43,7 +43,7 @@ async function insertUser(firstname, lastname, mail, password, cel) {
     });
 }
 
-function recoverUser(username) {
+function recoverUser(mail, password) {
     return new Promise((resolve, reject) => {
         const client = new MongoClient(uri, { useNewUrlParser: true });
         client.connect(function (err) {
@@ -51,17 +51,31 @@ function recoverUser(username) {
                 reject('Error loading DB');
             } else {
                 const collection = client.db('PRENOTATIONS').collection('Users');
-                collection.findOne({ 'username': username }, async (err, result) => {
+
+                collection.findOne({ 'mail': mail }, async (err, result) => {
                     if (err) {
                         client.close();
                         reject('Error looking for the user');
                     } else {
+                        // mail non esistente
                         if (result == null) {
                             client.close();
-                            reject('username incorretto, riprova');
+                            reject('mail inesistente, riprova');
                         } else {
-                            client.close();
-                            resolve(result._id);
+                            bcrypt.compare(password, result.password, function (err, res) {
+                                if (err) {
+                                    client.close();
+                                    reject('Error retrieving password');
+                                } else {
+                                    if (res == true) {
+                                        client.close();
+                                        resolve(result._id);
+                                    } else {
+                                        client.close();
+                                        reject('password errata, riprova');
+                                    }
+                                }
+                            });
                         }
                     }
                 });
