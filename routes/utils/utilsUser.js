@@ -1,9 +1,11 @@
 const MongoClient = require('mongodb').MongoClient;
+var simplecrypt = require("simplecrypt");
 const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retryWrites=true&w=majority";
+var sc = simplecrypt();
+
 
 async function insertUser(firstname, lastname, mail, password, cel) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    const user = { firstname: firstname, lastname: lastname, mail: mail, password: password, cel: cel, lessons: []};
     return new Promise((resolve, reject) => {
         client.connect(async function (err) {
             if (err) {
@@ -14,6 +16,8 @@ async function insertUser(firstname, lastname, mail, password, cel) {
                     let exists = await collection.findOne({ 'mail': mail });
                     if (!exists) {
                         // hash password and return 
+                        var digest = sc.encrypt(password);
+                        const user = { firstname: firstname, lastname: lastname, mail: mail, password: digest, cel: cel, lessons: []};
                         collection.insertOne(user, (error, response) => {
                             if (error) {
                                 client.close();
@@ -45,7 +49,7 @@ function recoverUser(username) {
                 reject('Error loading DB');
             } else {
                 const collection = client.db('PRENOTATIONS').collection('Users');
-                collection.findOne({ 'username': username }, async (err, result) => {
+                collection.findOne({ 'mail': username }, async (err, result) => {
                     if (err) {
                         client.close();
                         reject('Error looking for the user');
