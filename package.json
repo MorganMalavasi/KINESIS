@@ -15,14 +15,14 @@
   "author": "Morgan Malavasi",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "mongodb": "^3.3.2",
     "nodemailer": "^6.2.1",
-    "nodemon": "^1.19.1",
-    "path": "^0.12.7",
-    "simplecrypt": "^0.1.0"
+    "nodemon": "^2.0.3",
+    "path": "^0.12.7"
   }
 }
