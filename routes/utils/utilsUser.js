@@ -1,9 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
 const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retryWrites=true&w=majority";
 
-async function insertUser(firstname, lastname, username, cel) {
+async function insertUser(firstname, lastname, mail, password, cel) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    const user = { firstname: firstname, lastname: lastname, username: username, cel: cel, lessons: []};
+
     return new Promise((resolve, reject) => {
         client.connect(async function (err) {
             if (err) {
@@ -11,17 +12,27 @@ async function insertUser(firstname, lastname, username, cel) {
             } else {
                 const collection = client.db('PRENOTATIONS').collection('Users');
                 try {
-                    let exists = await collection.findOne({ 'username': username });
+                    let exists = await collection.findOne({ 'mail': mail });
                     if (!exists) {
-                        collection.insertOne(user, (error, response) => {
-                            if (error) {
+                        // hash password and enter
+                        bcrypt.hash(password, 10, (hasherr, hash) => {
+                            if (hasherr) {
                                 client.close();
                                 reject('Error entering element');
                             } else {
-                                client.close();
-                                resolve(1);
+                                const user = { firstname: firstname, lastname: lastname, mail: mail, password: hash, cel: cel, lessons: [] };
+                                collection.insertOne(user, (error, response) => {
+                                    if (error) {
+                                        client.close();
+                                        reject('Error entering element');
+                                    } else {
+                                        client.close();
+                                        resolve(1);
+                                    }
+                                });
                             }
                         });
+
                     } else {
                         client.close();
                         console.log('Username già esistente');
@@ -36,7 +47,7 @@ async function insertUser(firstname, lastname, username, cel) {
     });
 }
 
-function recoverUser(username) {
+function recoverUser(mail, password) {
     return new Promise((resolve, reject) => {
         const client = new MongoClient(uri, { useNewUrlParser: true });
         client.connect(function (err) {
@@ -44,17 +55,27 @@ function recoverUser(username) {
                 reject('Error loading DB');
             } else {
                 const collection = client.db('PRENOTATIONS').collection('Users');
-                collection.findOne({ 'username': username }, async (err, result) => {
+                collection.findOne({ 'mail': mail}, async (err, result) => {
                     if (err) {
                         client.close();
                         reject('Error looking for the user');
                     } else {
                         if (result == null) {
                             client.close();
-                            reject('username incorretto, riprova');
+                            reject('mail incorretta, riprova');
                         } else {
-                            client.close();
-                            resolve(result._id);
+                            bcrypt.compare(password, result.password, function(err, res){
+                                console.log(mail + " " + result.password);
+                                if (res){
+                                    // password match
+                                    client.close();
+                                    resolve(result._id);
+                                } else {
+                                    client.close();
+                                    reject('password incorretta, riprova');
+                                }
+                            });
+                            
                         }
                     }
                 });
