@@ -69,7 +69,7 @@ function recoverUser(mail, password) {
                                 } else {
                                     if (res == true) {
                                         client.close();
-                                        resolve(result._id);
+                                        resolve([result._id, result.firstname]);
                                     } else {
                                         client.close();
                                         reject('password errata, riprova');

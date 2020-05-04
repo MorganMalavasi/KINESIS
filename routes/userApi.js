@@ -46,9 +46,11 @@ router.post('/loginUser', async (req, res) => {
     let password = req.body.password;
 
     try {
-        let id_user = await utilsUser.recoverUser(mail, password);
+        let user_info = await utilsUser.recoverUser(mail, password);
+        id_user = user_info[0];
+        name = user_info[1];
         res.render('mainUserPage', {
-            name: mail,
+            name: name,
             user: id_user
         });
     } catch (error) {
