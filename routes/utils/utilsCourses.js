@@ -88,6 +88,7 @@ function lessonsBooked(idUser) {
                     // prenotate con tutte le informazioni di ogni lezione
 
                     // TODO : aggiungere eliminazione delle vecchie lezioni 
+                    //        oppure non leggere le lezioni che sono già state fatte 
 
                     if ((user.lessons).length == 0) {
                         client.close();

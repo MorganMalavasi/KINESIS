@@ -46,7 +46,7 @@
       font-family: "Roboto", sans-serif;
       text-transform: uppercase;
       outline: 0;
-      background: #4CAF50;
+      background: #00a1ab;
       width: 100%;
       border: 0;
       padding: 15px;
@@ -60,7 +60,7 @@
     .form button:hover,
     .form button:active,
     .form button:focus {
-      background: #43A047;
+      background: #00a1ab;
     }
 
     .form .message {
@@ -70,7 +70,7 @@
     }
 
     .form .message a {
-      color: #4CAF50;
+      color: #00a1ab;
       text-decoration: none;
     }
 
@@ -116,16 +116,20 @@
     }
 
     .container .info span .fa {
-      color: #EF3B3A;
+      color: #00a1ab;
+    }
+
+    .spaced {
+      margin-top: 10%;
     }
 
     body {
-      background: #76b852;
+      background: #00a1ab;
       /* fallback for old browsers */
-      background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-      background: -moz-linear-gradient(right, #76b852, #8DC26F);
-      background: -o-linear-gradient(right, #76b852, #8DC26F);
-      background: linear-gradient(to left, #76b852, #8DC26F);
+      background: -webkit-linear-gradient(right, #00a1ab, #00a1ab);
+      background: -moz-linear-gradient(right, #00a1ab, #00a1ab);
+      background: -o-linear-gradient(right, #00a1ab, #00a1ab);
+      background: linear-gradient(to left, #00a1ab, #00a1ab);
       font-family: "Roboto", sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -149,7 +153,7 @@
         <input type="text" placeholder="username" name="username">
         <input type="text" placeholder="password" name="password">
         <button>login</button>
-        <p class="message font-weight-bold">Non sei ancora registrato? <a href="/register-page">Crea un account!</a></p>
+        <a href="/register-page" class="btn btn-outline-secondary btn-sm spaced" role="button" aria-pressed="true">Non sei ancora registrato?</a>
       </form>
     </div>
   </div>
