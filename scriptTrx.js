@@ -1,5 +1,5 @@
-var start = new Date("09/27/2019");
-var end = new Date("06/16/2020");
+var start = new Date("05/11/2020");
+var end = new Date("08/31/2020");
 
 var loop = new Date(start);
 
@@ -10,8 +10,8 @@ while(loop <= end){
     let date = mm + '/' + dd + '/' + yyyy;
     
     // sunday = 0 , monday = 1 ,......  
-   if (loop.getDay() == 5){
-       db.getCollection('lessons').insertOne({'name': 'TOTAL BODY', 'uuid': '5e0f0b3a5a971f52676a3f90', 'seats': 20, 'users':[], 'day': date, 'time':'12:50'});
+   if (loop.getDay() == 1 || loop.getDay() == 3 || loop.getDay() == 5){
+       db.getCollection('lessons').insertOne({'name': 'FASCIA ORARIA 18:30/21:00', 'uuid': '5ebd6a3e61e7ac7ff79a2c0d', 'seats': 20, 'users':[], 'day': date, 'time':'18:30/21:00'});
    }
    var newDate = loop.setDate(loop.getDate() + 1);
    loop = new Date(newDate);

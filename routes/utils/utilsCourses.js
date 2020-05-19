@@ -71,7 +71,7 @@ function bookLesson(idUser, id, seats) {
     });
 }
 
-function lessonsBooked(idUser) {
+function lessonsBooked(idUser, today) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     return new Promise((resolve, reject) => {
         client.connect(async function (err) {
@@ -96,7 +96,7 @@ function lessonsBooked(idUser) {
                     } else {
                         (user.lessons).forEach(async function (elem, idx, array) {
                             let lesson = await collectionLessons.findOne({ "_id": ObjectId(elem) });
-                            await insertElementInStack(lesson, stackOfLessonsBooked);
+                            await insertElementInStack(lesson, today, stackOfLessonsBooked);
                             if (idx == array.length - 1) {
                                 client.close();
                                 resolve(stackOfLessonsBooked);
@@ -154,17 +154,24 @@ function deleteLesson(idUser, idLesson) {
 
 
 
-function insertElementInStack(lesson, stackOfLessonsBooked) {
-    return new Promise((resolve, reject) => {
+//////////////////////////////////// function support ////////////////////////////////////
+function insertElementInStack(lesson, today, stackOfLessonsBooked) {
+    return new Promise(async (resolve, reject) => {
         if (lesson) {
-            let id_lesson = lesson._id;
-            let name = lesson.name;
-            let day = lesson.day;
-            let time = lesson.time;
-            let people = lesson.users;
-            const obj = { id_lesson: id_lesson, name: name, day: day, time: time, users: people};
-            stackOfLessonsBooked.push(obj);
-            resolve();
+            // verifica che la prenotazione riguardi una prenotazione che deve ancora avvenire 
+            let check = await differenceInDaysToRetrieve(today, lesson.day);
+            if (check) {          
+                let id_lesson = lesson._id;                                     
+                let name = lesson.name;
+                let day = lesson.day;
+                let time = lesson.time;
+                let people = lesson.users;
+                const obj = { id_lesson: id_lesson, name: name, day: day, time: time, users: people };
+                stackOfLessonsBooked.push(obj);
+                resolve();
+            } else {
+                resolve();
+            }
         } else {
             resolve();
         }
@@ -177,12 +184,27 @@ function differenceInDays(d1, d2) {
         const date2 = new Date(d2);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays <= 7)
+        if (diffDays >= 0 && diffDays <= 2)
             resolve(true);
         else
             resolve(false);
     });
 }
 
+function differenceInDaysToRetrieve(d1, d2) {
+    return new Promise((resolve, reject) => {
+        const date1 = new Date(d1);
+        const date2 = new Date(d2);
+        const diffTime = date2 - date1;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0){
+            resolve(true);
+            console.log(diffDays);
+        }
+        else
+            resolve(false);
+    });
+}
 
-module.exports = { getCourses, bookLesson, lessonsBooked, deleteLesson};
+
+module.exports = { getCourses, bookLesson, lessonsBooked, deleteLesson };

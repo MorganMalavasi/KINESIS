@@ -67,12 +67,38 @@
     </style>
 </head>
 
-<body>
 
+
+<body>
+    <!-- HELLO NAME -->
     <div class="container">
         <h1>
             Ciao <%= name %>
         </h1>
+    </div>
+
+    <!-- ACCEPT MESSAGE  -->
+    <!-- Modal autotrigger // check for the opened -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">REGOLE KINESIS</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>testo</p>
+                    <p>testo</p>
+                    <p>testo</p>
+                    <p>testo</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="accept()">Accetta</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- toast for the message -->
@@ -97,8 +123,6 @@
     <div class="container">
         <hr class="dashed">
     </div>
-    
-
 
     <!-- lezioni a cui ci si può iscrivere -->
     <div class="container">
@@ -109,7 +133,7 @@
 
 
 
-
+    <!-- ///////////////////////////////////////////////////// SCRIPTS //////////////////////////////////////////////////// -->
     <script>
 
         // visualizzazione delle lezioni prenotate 
@@ -141,15 +165,11 @@
                             let time = lessonsBookedJson[obj].time;
 
                             // se ci sono più di 5 persone la lezione è garantita
-                            let lezGarantita;
-                            if ((lessonsBookedJson[obj].users).length >= 5)
-                                lezGarantita = "Lezione garantita";
-                            else
-                                lezGarantita = "Lezione non garantita";
+                            let remember = "Schiaccia la X se non vieni!";
 
                             let displayLesson = '<li>' + name + '</br> ' + newDay + '  h:' + time +
                                 '<span class="close"><a href="/courses/book/delete?user=<%=user%>&idLesson=' + id_lesson + '&name=<%=name%>" >&times</a>' +
-                                '</span><p><b>' + lezGarantita + '</b></p></li>';
+                                '</span><p><b>' + remember + '</b></p></li>';
 
 
                             stackResults = stackResults + displayLesson;
@@ -224,12 +244,38 @@
             xhttp2.open("GET", '/courses/book', true);
             xhttp2.send();
 
+            // check contract 
+            var xhttp3 = new XMLHttpRequest();
+            xhttp3.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText == 1) {
+                        $('#exampleModal').modal('show');
+                    }
+                    // not show dialog 
+                    if (this.responseText == 2) {
+                        console.log("CONTRACT ALREADY FIRMED");
+                    }
+                }
+            };
+            xhttp3.open("GET", '/user/checkContract/?user=<%=user%>', true);
+            xhttp3.send();
         }
 
-        // recover lessons when button is pushed 
+        // accept contract 
+        function accept() {
+            var xhttp3 = new XMLHttpRequest();
+            xhttp3.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    // show dialog 
+                }
+            };
+            xhttp3.open("GET", '/user/accept/?user=<%=user%>', true);
+            xhttp3.send();
+        }
 
 
-
+        // check if object is empty 
         function isEmpty(obj) {
             for (var prop in obj) {
                 return false;
@@ -237,6 +283,7 @@
             return true;
         }
 
+        // given date return String of day 
         function getDayString(d) {
             switch (d) {
                 case 0:
@@ -280,6 +327,7 @@
         crossorigin="anonymous"></script>
     <script>
         $('.toast').toast('show');
+        
     </script>
 </body>
 

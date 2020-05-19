@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://morgan:admin@musickinesis-x2kkv.mongodb.net/test?retryWrites=true&w=majority";
+var ObjectId = require('mongodb').ObjectID;
 var bcrypt = require('bcryptjs');
 
 async function insertUser(firstname, lastname, mail, password, cel) {
@@ -16,7 +17,7 @@ async function insertUser(firstname, lastname, mail, password, cel) {
                         // hash password and return 
                         bcrypt.genSalt(10, function (err, salt) {
                             bcrypt.hash(password, salt, function (err, hash) {
-                                const user = { firstname: firstname, lastname: lastname, mail: mail, password: hash, cel: cel, lessons: [] };
+                                const user = { firstname: firstname, lastname: lastname, mail: mail, password: hash, cel: cel, lessons: [], opened: false };
                                 collection.insertOne(user, (error, response) => {
                                     if (error) {
                                         client.close();
@@ -69,7 +70,7 @@ function recoverUser(mail, password) {
                                 } else {
                                     if (res == true) {
                                         client.close();
-                                        resolve([result._id, result.firstname]);
+                                        resolve([result._id, result.firstname, result.opened]);
                                     } else {
                                         client.close();
                                         reject('password errata, riprova');
@@ -84,5 +85,56 @@ function recoverUser(mail, password) {
     });
 }
 
+function acceptContract(id) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                try {
+                    const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                    // update opened value in DB for the user
+                    let findU = { "_id": ObjectId(id) };
+                    let updateU = { $set: { "opened": true } };
+                    await collectionUsers.updateOne(findU, updateU);
+                    client.close();
+                    resolve();
+                } catch (err) {
+                    client.close();
+                    reject(err);
+                }
+            }
+        });
+    });
+}
 
-module.exports = { insertUser, recoverUser };
+function readContract(id) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                try {
+                    const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                    // check if the opened variable of the user is checked 
+                    let exists = await collectionUsers.findOne({ '_id': ObjectId(id) });
+                    if (exists.opened == false){
+                        client.close();
+                        resolve(false);
+                    } else {
+                        client.close();
+                        resolve(true);
+                    }
+                } catch (err) {
+                    client.close();
+                    reject(err);
+                }
+            }
+        })
+    });
+}
+
+
+module.exports = { insertUser, recoverUser, acceptContract, readContract};

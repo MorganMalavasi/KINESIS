@@ -266,7 +266,7 @@ function differenceInDays(dayFromArray) {
         const date2 = new Date(dayFromArray);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays <= 7)
+        if (diffDays >= -1 && diffDays <= 7)
             resolve(true);
         else
             resolve(false);

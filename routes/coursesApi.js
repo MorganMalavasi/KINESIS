@@ -9,7 +9,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 // need to return a json with all the informations on the lessons you can get 
 router.get('/', async (req, res) => {
 
-    // get date to compare (7 days)
+    // get date to compare 
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -67,8 +67,15 @@ router.get('/prenotations', async (req, res) => {
 router.get('/view', async (req, res) => {
     let idUser = req.query.user;
 
+    // get date to compare 
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
+
     try {
-        let lessonsBooked = await utilsCourses.lessonsBooked(idUser);
+        let lessonsBooked = await utilsCourses.lessonsBooked(idUser, today);
         let lessonsBookedJson = JSON.stringify(lessonsBooked);
         res.send(lessonsBookedJson);
     } catch (err) {
@@ -98,5 +105,6 @@ router.get('/delete', async (req, res) => {
         });
     }
 });
+
 
 module.exports = router;
