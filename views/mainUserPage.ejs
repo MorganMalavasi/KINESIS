@@ -79,7 +79,8 @@
 
     <!-- ACCEPT MESSAGE  -->
     <!-- Modal autotrigger // check for the opened -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -197,8 +198,17 @@
                     let lessonsJson = JSON.parse(this.responseText);
                     console.log(lessonsJson);
 
-                    let stackResults = '';
+                    // divide json into two groups, one for the main sala and one for the courses
+
+                    let stackResultsSala = '<div class="card" style="margin-bottom: 10px">' +
+                        '<h5 class="card-header" style="background-color:#ff7315">SALA<h5>';
+
+                    let stackResultsCourses = '</br><div class="card" style="margin-bottom: 10px">' +
+                        '<h5 class="card-header" style="background-color:#5fdde5">CORSI<h5>';
+
+                    // check Sala
                     for (var obj in lessonsJson) {
+
                         let id_course = lessonsJson[obj]._id;
                         let nameCourse = lessonsJson[obj].name;
                         let day = new Date(lessonsJson[obj].day);
@@ -211,30 +221,62 @@
                         let time = 'Orario : ' + lessonsJson[obj].time;
                         let seats = lessonsJson[obj].seats;
 
-                        let displayCourses =
-                            '<div class="card" style="margin-bottom: 10px"> ' +
-                            '<h5 class="card-header" style="background-color:#ff7315">' +
-                            nameCourse +
-                            '</h5>' +
-                            '<div class="card-body" style="background-color: #f4f4f4">' +
-                            '<h5 class="card-title">' +
-                            day +
-                            '<p>' +
-                            time +
-                            '</p>' +
-                            '</h5>' +
-                            '<p class="card-text">Posti disponibili: ' +
-                            seats
-                            + '</p>' +
-                            '<a href="/courses/book/prenotations/?user=<%=user%>&name=<%=name%>&id=' + id_course +
-                            '&seats=' + seats +
-                            '" class="btn btn-primary">Prenota</a>' +
-                            '</div>' +
-                            '</div>';
+                        if (lessonsJson[obj].uuid == "5ebd6a3e61e7ac7ff79a2c0d") {
+                            let displayCourses =
+                                '<div class="card-text" style="background-color: #f4f4f4; border-style: solid; padding-top: 2%; padding-left: 2%;">' +
+                                '<div class="row">' +
+                                '<div class="col-8">' +
+                                '<h6 class="card-title">' +
+                                day +
+                                '<p>' +
+                                time +
+                                '</p>' +
+                                '<p>' +
+                                'Posti Disponibili : ' + seats +
+                                '</p>' +
+                                '</h6>' +
+                                '</div>' +
+                                '<div class="col-4">' +
+                                '<a href="/courses/book/prenotations/?user=<%=user%>&name=<%=name%>&id=' + id_course +
+                                '&seats=' + seats +
+                                '" class="btn btn-primary">Prenota</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
 
-                        stackResults = stackResults + displayCourses;
+                            stackResultsSala = stackResultsSala + displayCourses;
+                        } 
+                        if (lessonsJson[obj].uuid == "5ec535a78a8315bd36ad973b"){
+                            let displayCourses =
+                                '<div class="card-text" style="background-color: #f4f4f4; border-style: solid; padding-top: 2%; padding-left: 2%;">' +
+                                '<div class="row">' +
+                                '<div class="col-8">' +
+                                '<h6 class="card-title">' +
+                                '<p>' + nameCourse + '</p>' + 
+                                day + 
+                                '<p>' +
+                                time +
+                                '</p>' +
+                                '<p>' +
+                                'Posti Disponibili : ' + seats +
+                                '</p>' +
+                                '</h6>' +
+                                '</div>' +
+                                '<div class="col-4">' +
+                                '<a href="/courses/book/prenotations/?user=<%=user%>&name=<%=name%>&id=' + id_course +
+                                '&seats=' + seats +
+                                '" class="btn btn-primary">Prenota</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+
+                                stackResultsCourses = stackResultsCourses + displayCourses;
+                        }
                     }
-                    document.getElementById("fill").innerHTML = stackResults;
+                    stackResultsSala = stackResultsSala + '</div>';
+                    stackResultsCourses = stackResultsCourses + '</div>';
+
+                    document.getElementById("fill").innerHTML = stackResultsSala + stackResultsCourses;
 
                 }
                 else if (this.status == 400 || this.status == 500 || this.status == 505 || this.status == 404 || this.status == 403) {
@@ -327,7 +369,7 @@
         crossorigin="anonymous"></script>
     <script>
         $('.toast').toast('show');
-        
+
     </script>
 </body>
 
