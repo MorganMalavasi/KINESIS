@@ -15,14 +15,11 @@
 
 <body>
     <div class="container">
-        <h1>Lista lezioni nel database</h1>
-        <h4>Il tasto rimuovi elimina la lezione per il determinato giorno</h4>
-        </br>
 
         <% function getStringDate(day) { 
             let dayDateFormat = new Date(day);
             let d = dayDateFormat.getDay();
-            let dX = dayDateFormat.getUTCDate();
+            let dX = dayDateFormat.getUTCDate() + 1;
             let m = dayDateFormat.getMonth() + 1;
             let y = dayDateFormat.getFullYear();
             let dayString = getDayString(d);
@@ -60,17 +57,35 @@
 
 
         <% if (stackLessons != 'undefined') { %>
-        <ul class="list-group list-group-flush">
-            <% for (let prop in stackLessons) { %>
-            <li class="list-group-item" style="font-size: 18px">
-                <%= stackLessons[prop].name + ' ---- ' +  getStringDate(stackLessons[prop].day) %>
-                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-danger"
-                    style="float: right;">Rimuovi</a>
-                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>" class="btn btn-primary"
-                    style="float: right; margin-right: 10px">Vedi Iscritti</a>
-            </li>
-            <% } %>
-        </ul>
+        <div class="card" style="margin-bottom: 10px">
+            <h5 class="card-header" style="background-color:#ff7315">LISTA UTENTI<h5>
+                    <% for (let prop in stackLessons) { %>
+                    <div class="card-text"
+                        style="background-color: #f4f4f4; border-style: solid; padding-top: 2%; padding-left: 2%;">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="card-title">
+                                    <b>
+                                        <%= stackLessons[prop].name %>
+                                    </b>
+                                    <p>
+                                        <%= getStringDate(stackLessons[prop].day) %>
+                                    </p>
+                                    <p>
+                                        Orario = <%= stackLessons[prop].time %>
+                                    </p>
+                                </h6>
+                            </div>
+                            <div class="col-4">
+                                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>"
+                                    class="btn btn-danger btn-sm">Rimuovi</a>
+                                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>"
+                                    class="btn btn-primary btn-sm">Vedi Iscritti</a>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+        </div>
         <% } %>
         <% if (msg != 'undefined'){ %>
         <h4><%=msg%></h4>

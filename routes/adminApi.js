@@ -45,14 +45,22 @@ router.get('/newcourse', (req, res) => {
 
 router.get('/list/lessons', async (req, res) => {
 
+    // get date to compare 
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
+
     try {
-        let stackLessons = await utilsAdmin.getAllLessons();
+        let stackLessons = await utilsAdmin.getAllLessons(today);
         if (typeof stackLessons != undefined
             && stackLessons != null
             && stackLessons.length != null
             && stackLessons.length > 0) {
+            let orderStack = await orderDates(stackLessons);
             res.render('operations/listLessons', {
-                stackLessons: stackLessons,
+                stackLessons: orderStack,
                 msg: ''
             });
         } else {
@@ -127,5 +135,16 @@ router.get('/delete/user/inlesson', async (req, res) => {
         res.status(204).send('IMPOSSIBILE ELIMINARE UTENTE DALLA LEZIONE Errore = ' + err);
     }
 });
+
+function orderDates(array) {
+    return new Promise((resolve, reject) => {
+        array.sort(function (a, b) {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(a.day) - new Date(b.day);
+        });
+        resolve(array);
+    });
+}
 
 module.exports = router;

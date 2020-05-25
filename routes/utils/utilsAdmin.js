@@ -91,7 +91,7 @@ function copyLessons(user, stack) {
     });
 }
 
-function getAllLessons() {
+function getAllLessons(today) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     return new Promise((resolve, reject) => {
         client.connect((err) => {
@@ -102,12 +102,11 @@ function getAllLessons() {
                 const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
                 collectionLessons.find().forEach(async (elem) => {
                     // difference in days between today and the day from the array 
-                    const diff = await differenceInDays(elem.day);
+                    const diff = await differenceInDays(today, elem.day);
                     if (diff)
                         stackLessons.push(elem);
                 }).then(() => {
                     client.close();
-                    console.log(stackLessons);
                     resolve(stackLessons);
                 });
             }
@@ -260,13 +259,13 @@ function deleteUserFromList(idLesson, idUser) {
     });
 }
 
-function differenceInDays(dayFromArray) {
+function differenceInDays(d1, d2) {
     return new Promise((resolve, reject) => {
-        const date1 = new Date();
-        const date2 = new Date(dayFromArray);
+        const date1 = new Date(d1);
+        const date2 = new Date(d2);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= -1 && diffDays <= 7)
+        if (diffDays >= 0 && diffDays < 7)
             resolve(true);
         else
             resolve(false);

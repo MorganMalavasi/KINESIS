@@ -16,17 +16,34 @@
 <body>
     <div class="container">
         <h1>Lista utenti nel database</h1>
-    </br>
+        </br>
 
         <% if (stackUsers != 'undefined') { %>
-        <ul class="list-group list-group-flush">
-            <% for (let prop in stackUsers) { %>
-            <li class="list-group-item" style="font-size: 20px">
-                <%= stackUsers[prop].firstname + ' ' +  stackUsers[prop].lastname + ' cel:' + stackUsers[prop].cel%>
-                <a href="/admin/delete/user/?userId=<%=stackUsers[prop]._id%>" class="btn btn-danger" style="float: right;">Rimuovi</a>
-            </li>
-            <% } %>
-        </ul>
+        <div class="card" style="margin-bottom: 10px">
+            <h5 class="card-header" style="background-color:#ff7315">LISTA UTENTI<h5>
+                    <% for (let prop in stackUsers) { %>
+                    <div class="card-text"
+                        style="background-color: #f4f4f4; border-style: solid; padding-top: 2%; padding-left: 2%;">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="card-title">
+                                    <%= stackUsers[prop].firstname + ' ' +  stackUsers[prop].lastname %>
+                                    <p>
+                                        <%= stackUsers[prop].mail %>
+                                    </p>
+                                    <p>
+                                        <%=stackUsers[prop].cel%>
+                                    </p>
+                                </h6>
+                            </div>
+                            <div class="col-4">
+                                <a href="/admin/delete/user/?userId=<%=stackUsers[prop]._id%>"
+                                    class="btn btn-danger">Rimuovi</a>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+        </div>
         <% } else { %>
         <p class="lead">Nessun utente presente nel Database</p>
         <% }; %>
