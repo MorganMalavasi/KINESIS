@@ -1,4 +1,4 @@
-var start = new Date("05/20/2020");
+var start = new Date("06/01/2020");
 var end = new Date("08/31/2020");
 
 var loop = new Date(start);
@@ -11,7 +11,7 @@ while(loop <= end){
     
     // sunday = 0 , monday = 1 ,......  
    if (loop.getDay() == 1){
-       db.getCollection('lessons').insertOne({'name': 'SALA/PALESTRA', 'uuid': '5ebd6a3e61e7ac7ff79a2c0d', 'seats': 20, 'users':[], 'day': date, 'time':'09:00/11:00'});
+       db.getCollection('lessons').insertOne({'name': 'SALA/PALESTRA', 'uuid': '5ec535a78a8315bd36ad973b', 'seats': 25, 'users':[], 'day': date, 'time':'16:00/18:00'});
    }
    var newDate = loop.setDate(loop.getDate() + 1);
    loop = new Date(newDate);

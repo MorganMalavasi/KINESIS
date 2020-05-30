@@ -259,6 +259,64 @@ function deleteUserFromList(idLesson, idUser) {
     });
 }
 
+function removeSeat(idLesson) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async (err) => {
+            if (err) {
+                reject('Error loading DB');
+            } else {
+                const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+                let lesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
+                if (lesson) {
+                    // riservare un posto, quindi se il numero di posti è maggiore di 0,...
+                    // diminuire di uno il numero di posti disponibili 
+                    if (lesson.seats > 0) {
+                        let newSeats = lesson.seats - 1;
+                        let findL = { "_id": ObjectId(idLesson) };
+                        let updateL = { $set: { "seats": newSeats } };
+                        await collectionLessons.updateOne(findL, updateL);
+                        client.close();
+                        resolve();
+                    } else {
+                        client.close();
+                        reject('Non ci sono più posti disponibili, impossibile riservare il posto');
+                    }
+                } else {
+                    client.close();
+                    reject('Lezione non esistente');
+                }
+            }
+        });
+    });
+}
+
+function insertSeat(idLesson) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async (err) => {
+            if (err) {
+                reject('Errore caricamento database');
+            } else {
+                const collectionLessons = client.db('PRENOTATIONS').collection('lessons');
+                let lesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
+                if (lesson) {
+                    // riservare un posto, quindi se il numero di posti è maggiore di 0,...
+                    // diminuire di uno il numero di posti disponibili 
+
+                    let newSeats = lesson.seats + 1;
+                    let findL = { "_id": ObjectId(idLesson) };
+                    let updateL = { $set: { "seats": newSeats } };
+                    await collectionLessons.updateOne(findL, updateL);
+                    client.close();
+                    resolve();
+
+                }
+            }
+        });
+    });
+}
+
 function differenceInDays(d1, d2) {
     return new Promise((resolve, reject) => {
         const date1 = new Date(d1);
@@ -274,4 +332,4 @@ function differenceInDays(d1, d2) {
 
 
 
-module.exports = { getlistUsers, deleteUser, getAllLessons, deleteSingleLesson, getAllUsersOfLesson, deleteUserFromList };
+module.exports = { getlistUsers, deleteUser, getAllLessons, deleteSingleLesson, getAllUsersOfLesson, deleteUserFromList, removeSeat, insertSeat };

@@ -184,7 +184,7 @@ function differenceInDays(d1, d2) {
         const date2 = new Date(d2);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays < 2)
+        if (diffDays >= 0 && diffDays < 8)
             resolve(true);
         else
             resolve(false);

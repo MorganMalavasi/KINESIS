@@ -84,11 +84,15 @@ router.get('/delete/lesson', async (req, res) => {
     let idLesson = req.query.idLesson;
     try {
         await utilsAdmin.deleteSingleLesson(idLesson);
-        res.render('admin');
+        res.render('operations/messageAdmin', {
+            msg: "Lezione cancellata correttamente"
+        });
 
     } catch (err) {
         console.log(err);
-        res.status(204).send('IMPOSSIBILE ELIMINARE LEZIONE Errore = ' + err);
+        res.render('operations/messageAdmin', {
+            msg: "Non è stato possibile cancellare la lezione, errore = " + err + " "
+        });
     }
 });
 
@@ -129,10 +133,44 @@ router.get('/delete/user/inlesson', async (req, res) => {
 
     try {
         await utilsAdmin.deleteUserFromList(idLesson, idUser);
-        res.render('admin');
+        res.render('operations/messageAdmin', {
+            msg: "Prenotazione rimossa correttamente"
+        });
     } catch (err) {
         console.log(err);
-        res.status(204).send('IMPOSSIBILE ELIMINARE UTENTE DALLA LEZIONE Errore = ' + err);
+        res.render('operations/messageAdmin', {
+            msg: "Non è stato possibile rimuovere la prenotazione dell'utente, errore = " + err + " "
+        });
+    }
+});
+
+router.get('/removeSeat', async(req, res) => {
+    let idLesson = req.query.idLesson;
+    try {
+        await utilsAdmin.removeSeat(idLesson);
+        res.render('operations/messageAdmin', {
+            msg: 'Posto cancellato correttamente'
+        });
+    } catch (err) {
+        console.log(err);
+        res.render('messageAdmin', {
+            msg: 'Errore di sistema, non è stato possibile cancellare il posto'
+        });
+    }
+});
+
+router.get('/addSeat', async (req, res) => {
+    let idLesson = req.query.idLesson;
+    try {
+        await utilsAdmin.insertSeat(idLesson);
+        res.render('operations/messageAdmin', {
+            msg: 'Posto aggiunto correttamente'
+        });
+    } catch (err) {
+        console.log(err);
+        res.render('messageAdmin', {
+            msg: 'Errore di sistema, non è stato possibile aggiungere il posto'
+        });
     }
 });
 

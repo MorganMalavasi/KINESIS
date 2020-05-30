@@ -15,22 +15,29 @@
 
 <body>
   <div class="container">
-    <h1 style="margin-top: 20px">Pagina di controllo</h1>
-    <h4>Azioni possibili:</h4>
-    <h5>-Visualizzare lista utenti, aggiungere nuovo utente, eliminare utente esistente</h5>
-    <h5>-Visualizzare lista delle lezioni con partecipanti</h5>
-    <h5>-Rimuovere partecipante ad una lezione</h5>
-    <h5>-Eliminare una lezione (una volta eliminata non è più possibile recuperarla)</h5>
-    <h5>-Creare un nuovo corso specificando nome, data e ora del corso</h5>
-    <h5>-Rimuovere un corso</h5>
+    <h1 style="margin-top: 20px; text-align: center;">Pagina di controllo</h1>
 
     </br>
-    <a class="btn btn-primary btn-lg btn-block" href="/register-page">Aggiungi nuovo utente</a>
-    <a class="btn btn-secondary btn-lg btn-block" href="/admin/list/users">Lista utenti + rimuovi utente</a>
-    <a class="btn btn-warning btn-lg btn-block" href="/admin/list/lessons">Lista lezioni + rimuovi lezione + rimuovi utente da lezione</a>
-    <a class="btn btn-danger btn-lg btn-block" href="/admin/newcourse">Crea nuovo corso</a>
-    <a class="btn btn-info btn-lg btn-block">Rimuovi corso</a>
+    <div class="container" style="display: flex; justify-content: center; margin-bottom: 10px;">
+      <a class="btn btn-primary btn-block" href="/register-page">Crea nuovo utente</a>
+    </div>
 
+    <div class="container" style="display: flex; justify-content: center;margin-bottom: 10px;">
+      <a class="btn btn-secondary btn-block" href="/admin/list/users">Lista utenti</a>
+    </div>
+
+    <div class="container" style="display: flex; justify-content: center;margin-bottom: 10px;">
+      <a class="btn btn-warning btn-block" href="/admin/list/lessons">Lista lezioni</a>
+    </div>
+
+    <div class="container" style="display: flex; justify-content: center;margin-bottom: 10px;">
+      <a class="btn btn-danger btn-block" href="/admin/newcourse">Crea nuovo corso / in fase di creazione</a>
+    </div>
+
+    <div class="container" style="display: flex; justify-content: center;margin-bottom: 10px;">
+      <a class="btn btn-info btn-block">Rimuovi corso / in fase di creazione</a>
+    </div>
+      
   </div>
 
 

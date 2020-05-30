@@ -19,11 +19,11 @@
         <% function getStringDate(day) { 
             let dayDateFormat = new Date(day);
             let d = dayDateFormat.getDay();
-            let dX = dayDateFormat.getUTCDate() + 1;
+            let dX = dayDateFormat.getDate();
             let m = dayDateFormat.getMonth() + 1;
             let y = dayDateFormat.getFullYear();
             let dayString = getDayString(d);
-            let newDay =  dayString + " " + dX + "/" + m + "/" + y;
+            let newDay = dayString + " " + dX + "/" + m + "/" + y;
             return newDay;
         } %>
 
@@ -74,13 +74,32 @@
                                     <p>
                                         Orario = <%= stackLessons[prop].time %>
                                     </p>
+                                    <p>
+                                        Posti disponibili = <%= stackLessons[prop].seats %>
+                                    </p>
                                 </h6>
                             </div>
                             <div class="col-4">
-                                <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>"
-                                    class="btn btn-danger btn-sm">Rimuovi</a>
-                                <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>"
-                                    class="btn btn-primary btn-sm">Vedi Iscritti</a>
+
+                                <div class="btn-group-vertical" role="group">
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button"
+                                            class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Operazioni
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <a href="/admin/listusersinlesson/?idLesson=<%=stackLessons[prop]._id%>"
+                                                class="dropdown-item">Vedi Iscritti</a>
+                                            <a href="/admin/removeSeat/?idLesson=<%=stackLessons[prop]._id%>"
+                                                class="dropdown-item">Rimuovi Posto</a>
+                                            <a href="/admin/addSeat/?idLesson=<%=stackLessons[prop]._id%>"
+                                                class="dropdown-item">Aggiungi Posto</a>
+                                            <a href="/admin/delete/lesson/?idLesson=<%=stackLessons[prop]._id%>"
+                                                class="dropdown-item">Rimuovi lezione</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
