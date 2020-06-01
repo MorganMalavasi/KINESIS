@@ -39,22 +39,28 @@ function bookLesson(idUser, id, seats) {
                     const collectionUsers = client.db('PRENOTATIONS').collection('Users');
                     let elem = await collectionLessons.findOne({ "_id": ObjectId(id) });
 
+                    console.log(elem.originalSeats[0]);
                     // se nella lezione cercata non c'è l'id dell'utente allora posso inserirlo
                     if (!(elem.users).includes(idUser)) {
                         try {
                             // inserimento nella collezione delle lezioni 
-                            let newSeats = seats - 1;
-                            let findL = { "_id": ObjectId(id) };
-                            let updateL = { $set: { "seats": newSeats }, $push: { "users": idUser } };
-                            await collectionLessons.updateOne(findL, updateL);
+                            let newSeats = elem.originalSeats[0] - elem.users.length - 1;
+                            if (newSeats <= 0) {
+                                client.close();
+                                resolve(2);
+                            } else {
+                                let findL = { "_id": ObjectId(id) };
+                                let updateL = { $set: { "seats": newSeats }, $push: { "users": idUser } };
+                                await collectionLessons.updateOne(findL, updateL);
 
-                            // inserimento nella collezione degli utenti
-                            let findU = { "_id": ObjectId(idUser) };
-                            let updateU = { $push: { "lessons": id } };
-                            await collectionUsers.updateOne(findU, updateU);
+                                // inserimento nella collezione degli utenti
+                                let findU = { "_id": ObjectId(idUser) };
+                                let updateU = { $push: { "lessons": id } };
+                                await collectionUsers.updateOne(findU, updateU);
 
-                            client.close();
-                            resolve(1);
+                                client.close();
+                                resolve(1);
+                            }
                         } catch (err) {
                             client.close();
                             console.log(err);
@@ -132,8 +138,7 @@ function deleteLesson(idUser, idLesson) {
                     // cancellare utente dalla lista nelle lezioni e aumentare di 1 i posti
                     let foundLesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
                     if (foundLesson && (foundLesson.users).includes(idUser)) {
-                        let seats = foundLesson.seats;
-                        let newSeats = seats + 1;
+                        let newSeats = foundLesson.originalSeats[0] - foundLesson.users.length + 1;
                         let findL = { "_id": ObjectId(idLesson) };
                         let updateL = { $set: { "seats": newSeats }, $pull: { "users": idUser } };
                         await collectionLessons.updateOne(findL, updateL);
@@ -160,8 +165,8 @@ function insertElementInStack(lesson, today, stackOfLessonsBooked) {
         if (lesson) {
             // verifica che la prenotazione riguardi una prenotazione che deve ancora avvenire 
             let check = await differenceInDaysToRetrieve(today, lesson.day);
-            if (check) {          
-                let id_lesson = lesson._id;                                     
+            if (check) {
+                let id_lesson = lesson._id;
                 let name = lesson.name;
                 let day = lesson.day;
                 let time = lesson.time;
@@ -197,7 +202,7 @@ function differenceInDaysToRetrieve(d1, d2) {
         const date2 = new Date(d2);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0){
+        if (diffDays >= 0) {
             resolve(true);
             console.log(diffDays);
         }
