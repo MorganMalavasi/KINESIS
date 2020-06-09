@@ -69,6 +69,17 @@ app.get('/serena', (req, res) => {
   res.render('personal/serena');
 });
 
+app.get('/ilaria', (req, res) => {
+  res.render('personal/ilaria');
+});
+
+app.get('/stefania', (req, res) => {
+  res.render('personal/stefania');
+});
+
+app.get('/daniele', (req, res) => {
+  res.render('personal/daniele');
+});
 /////////////////////////////////////////////////////////////
 
 app.get('/sendmessage', (req, res) => {
