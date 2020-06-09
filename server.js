@@ -65,6 +65,10 @@ app.get('/trainingDaniele', (req, res) => {
   res.render('trainingDaniele');
 });
 
+app.get('/serena', (req, res) => {
+  res.render('personal/serena');
+});
+
 /////////////////////////////////////////////////////////////
 
 app.get('/sendmessage', (req, res) => {
