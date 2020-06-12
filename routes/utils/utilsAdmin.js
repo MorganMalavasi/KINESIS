@@ -195,17 +195,8 @@ function getAllUsersOfLesson(idLesson) {
                 let lesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
                 if (lesson) {
                     if ((lesson.users).length > 0) {
-                        (lesson.users).forEach(async (elem, idx, arr) => {
-                            // per ogni id cerca l'utente associato e mettilo nello stack 
-                            const user = await collectionUsers.findOne({ "_id": ObjectId(elem) });
-                            if (user)
-                                stackUsersInLesson.push(user);
-
-                            if (idx == arr.length - 1) {
-                                client.close();
-                                resolve(stackUsersInLesson);
-                            }
-                        });
+                        client.close();
+                        resolve(lesson.users);
                     } else {
                         client.close();
                         resolve(stackUsersInLesson);
