@@ -7,7 +7,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/list/users', async (req, res) => {
-
     try {
         let listUsers = await utilsAdmin.getlistUsers();
         console.log(listUsers);
@@ -105,6 +104,7 @@ router.get('/listusersinlesson', async (req, res) => {
             && stackUsersofLesson != null
             && stackUsersofLesson.length != null
             && stackUsersofLesson.length > 0) {
+            sleep(1000);
             res.render('operations/listLessonUsers', {
                 idLesson: idLesson,
                 stackUsersofLesson: stackUsersofLesson,
@@ -144,7 +144,7 @@ router.get('/delete/user/inlesson', async (req, res) => {
     }
 });
 
-router.get('/removeSeat', async(req, res) => {
+router.get('/removeSeat', async (req, res) => {
     let idLesson = req.query.idLesson;
     try {
         await utilsAdmin.removeSeat(idLesson);
@@ -182,6 +182,12 @@ function orderDates(array) {
             return new Date(a.day) - new Date(b.day);
         });
         resolve(array);
+    });
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
     });
 }
 
