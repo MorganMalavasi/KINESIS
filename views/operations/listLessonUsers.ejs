@@ -16,9 +16,13 @@
 <body>
     <div class="container">
 
-        <% function countPeople(stack) {
+        <%  function countPeople(stack) {
                 return stack.length;
-        } %>
+            }
+        %>
+
+
+
 
         <h3>Gli utenti nella lezione sono i seguenti</h3>
         <h5>Tasto Rimuovi = rimuovi utente dalla fascia/corso selezionato </h5>
@@ -29,6 +33,7 @@
                 <%= countPeople(stackUsersofLesson) %><h5>
 
                     <% for (let prop in stackUsersofLesson) { %>
+                 
                     <div class="card-text"
                         style="background-color: #f4f4f4; border-style: solid; padding-top: 2%; padding-left: 2%;">
                         <div class="row">
@@ -58,8 +63,6 @@
         <% if (msg != 'undefined'){ %>
         <h4><%=msg%></h4>
         <% }; %>
-
-
 
     </div>
 

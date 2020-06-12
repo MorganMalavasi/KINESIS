@@ -99,7 +99,8 @@ router.get('/listusersinlesson', async (req, res) => {
     // get all users in lesson
     let idLesson = req.query.idLesson;
     try {
-        let stackUsersofLesson = await utilsAdmin.getAllUsersOfLesson(idLesson);
+        let stack = await utilsAdmin.getAllUsersOfLesson(idLesson);
+        let stackUsersofLesson = await utilsAdmin.getSingleUsers(stack);
         console.log(stackUsersofLesson);
         if (typeof stackUsersofLesson != undefined
             && stackUsersofLesson != null
@@ -172,6 +173,12 @@ router.get('/addSeat', async (req, res) => {
             msg: 'Errore di sistema, non è stato possibile aggiungere il posto'
         });
     }
+});
+
+router.get('/retrieveUser', async (req, res) => {
+    let idUser = req.query.user;
+    console.log(idUser);
+    res.send(idUser);
 });
 
 function orderDates(array) {

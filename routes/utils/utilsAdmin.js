@@ -308,6 +308,32 @@ function insertSeat(idLesson) {
     });
 }
 
+function getSingleUsers(oggetto) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    return new Promise((resolve, reject) => {
+        client.connect(async (err) => {
+            if (err) {
+                reject('Errore caricamento database');
+            } else {
+                let stack = [];
+                const collectionUsers = client.db('PRENOTATIONS').collection('Users');
+                let ctr = 0;
+                oggetto.forEach(async function (element, index, array) {
+                    let user = await collectionUsers.findOne({ "_id": ObjectId(element) });
+                    if (user){
+                        stack.push(user);
+                    }
+                    ctr++;
+                    if (ctr === array.length) {
+                        client.close();
+                        resolve(stack);
+                    }
+                });
+            }
+        });
+    });
+}
+
 function differenceInDays(d1, d2) {
     return new Promise((resolve, reject) => {
         const date1 = new Date(d1);
@@ -323,4 +349,4 @@ function differenceInDays(d1, d2) {
 
 
 
-module.exports = { getlistUsers, deleteUser, getAllLessons, deleteSingleLesson, getAllUsersOfLesson, deleteUserFromList, removeSeat, insertSeat };
+module.exports = { getlistUsers, deleteUser, getAllLessons, deleteSingleLesson, getAllUsersOfLesson, deleteUserFromList, removeSeat, insertSeat, getSingleUsers };
