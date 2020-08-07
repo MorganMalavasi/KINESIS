@@ -33,8 +33,14 @@ app.get('/promo', (req, res) => {
   res.render('promo');
 });
 
+/*
 app.get('/login-page', (req, res) => {
   res.render('login-page');
+});
+*/
+
+app.get('/login-page', (req, res) => {
+  res.render('930agosto');
 });
 
 app.get('/register-page', (req, res) => {
