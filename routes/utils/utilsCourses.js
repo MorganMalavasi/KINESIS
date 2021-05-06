@@ -39,12 +39,11 @@ function bookLesson(idUser, id, seats) {
                     const collectionUsers = client.db('PRENOTATIONS').collection('Users');
                     let elem = await collectionLessons.findOne({ "_id": ObjectId(id) });
 
-                    console.log(elem.originalSeats[0]);
                     // se nella lezione cercata non c'è l'id dell'utente allora posso inserirlo
                     if (!(elem.users).includes(idUser)) {
                         try {
                             // inserimento nella collezione delle lezioni 
-                            let newSeats = elem.originalSeats[0] - elem.users.length - 1;
+                            let newSeats = elem.originalSeats - elem.users.length - 1;
                             if (newSeats <= 0) {
                                 client.close();
                                 resolve(2);
@@ -138,7 +137,7 @@ function deleteLesson(idUser, idLesson) {
                     // cancellare utente dalla lista nelle lezioni e aumentare di 1 i posti
                     let foundLesson = await collectionLessons.findOne({ "_id": ObjectId(idLesson) });
                     if (foundLesson && (foundLesson.users).includes(idUser)) {
-                        let newSeats = foundLesson.originalSeats[0] - foundLesson.users.length + 1;
+                        let newSeats = foundLesson.originalSeats - foundLesson.users.length + 1;
                         let findL = { "_id": ObjectId(idLesson) };
                         let updateL = { $set: { "seats": newSeats }, $pull: { "users": idUser } };
                         await collectionLessons.updateOne(findL, updateL);
@@ -189,7 +188,7 @@ function differenceInDays(d1, d2) {
         const date2 = new Date(d2);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays < 3)
+        if (diffDays >= 0 && diffDays < 7)
             resolve(true);
         else
             resolve(false);
